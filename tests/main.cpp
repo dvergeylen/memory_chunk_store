@@ -20,7 +20,7 @@
 #include "../recycling_policy.h"
 #include "../memory_chunk.h"
 
-MemoryChunkStore<int, RecyclingPolicy, int, int> store(0); /* 0: → always release (no chunk recycling) */
+MemoryChunkStore<RecyclingPolicy, int, int, int> store(0); /* 0: → always release (no chunk recycling) */
 int* elements[300];
 
 TEST_SUITE("Unit Tests") {

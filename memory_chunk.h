@@ -42,7 +42,7 @@
  * or always recycle (never release). In between situations
  * may occur according to a custom recycling policy.
  */
-template <typename T, typename R, typename RArg, typename... TArgs >
+template <typename R, typename RArg, typename T, typename... TArgs >
 class MemoryChunkStore {
   std::queue<T*> available_chunks;
   std::mutex available_chunks_mtx;

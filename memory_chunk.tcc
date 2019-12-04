@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-template <typename T, typename R, typename RArg, typename... TArgs >
-T* MemoryChunkStore<T, R, RArg, TArgs...>::pull_chunk(TArgs... args) {
+template <typename R, typename RArg, typename T, typename... TArgs >
+T* MemoryChunkStore<R, RArg, T, TArgs...>::pull_chunk(TArgs... args) {
   T* ref;
 
   if (!available_chunks.empty()) {
@@ -50,8 +50,8 @@ T* MemoryChunkStore<T, R, RArg, TArgs...>::pull_chunk(TArgs... args) {
   }
 }
 
-template <typename T, typename R, typename RArg, typename... TArgs >
-void MemoryChunkStore<T, R, RArg, TArgs...>::push_chunk(T* chunk) {
+template <typename R, typename RArg, typename T, typename... TArgs >
+void MemoryChunkStore<R, RArg, T, TArgs...>::push_chunk(T* chunk) {
   available_chunks_mtx.lock();
 
   /* Release or not, according to recycling_rate */
@@ -64,30 +64,30 @@ void MemoryChunkStore<T, R, RArg, TArgs...>::push_chunk(T* chunk) {
   }
 }
 
-template <typename T, typename R, typename RArg, typename... TArgs >
-bool MemoryChunkStore<T, R, RArg, TArgs...>::is_empty(){
+template <typename R, typename RArg, typename T, typename... TArgs >
+bool MemoryChunkStore<R, RArg, T, TArgs...>::is_empty(){
   return available_chunks.empty();
 }
 
-template <typename T, typename R, typename RArg, typename... TArgs >
-int MemoryChunkStore<T, R, RArg, TArgs...>::size(){
+template <typename R, typename RArg, typename T, typename... TArgs >
+int MemoryChunkStore<R, RArg, T, TArgs...>::size(){
   return available_chunks.size();
 }
 
-template <typename T, typename R, typename RArg, typename... TArgs >
-void MemoryChunkStore<T, R, RArg, TArgs...>::set_recycling_params(RArg params) {
+template <typename R, typename RArg, typename T, typename... TArgs >
+void MemoryChunkStore<R, RArg, T, TArgs...>::set_recycling_params(RArg params) {
   std::lock_guard<std::mutex> guard(available_chunks_mtx);
   policy->set_recycling_params(params);
 }
 
-template <typename T, typename R, typename RArg, typename... TArgs >
-RArg MemoryChunkStore<T, R, RArg, TArgs...>::get_recycling_params(){
+template <typename R, typename RArg, typename T, typename... TArgs >
+RArg MemoryChunkStore<R, RArg, T, TArgs...>::get_recycling_params(){
   std::lock_guard<std::mutex> guard(available_chunks_mtx);
   return policy->get_recycling_params();
 }
 
-template <typename T, typename R, typename RArg, typename... TArgs >
-void MemoryChunkStore<T, R, RArg, TArgs...>::empty_memory_chunks_queue(){
+template <typename R, typename RArg, typename T, typename... TArgs >
+void MemoryChunkStore<R, RArg, T, TArgs...>::empty_memory_chunks_queue(){
   T* chunk;
   std::lock_guard<std::mutex> guard(available_chunks_mtx);
 
