@@ -1,7 +1,27 @@
 #ifndef RECYCLING_POLICY_H
 #define RECYCLING_POLICY_H
 
-#include <random>     /* std::uniform_int_distribution */
+/* This RecyclingPolicy class is an example of
+ * what can be used to help the Memory Chunk Store
+ * to take recycling policy decisions.
+ * Any RecyclingPolicy class you may write should implement
+ * the following functions:
+ * - bool should_recycle(int size)
+ * - void set_recycling_params(RArgs args)
+ * - RArgs get_recycling_params()
+ *
+ * The example below instanciates a uniform distribution
+ * and compares every round result to a recycling policy
+ * rate, between 0 and 100.
+ *
+ * A recycling_rate of 0 means never recycle any chunk
+ * given back, while a recycling_rate of 100 means recycle
+ * every chunk given back (and never release, which might
+ * be problematic at some point). These are extreme value
+ * but any in between threshold is valid [0:100].
+ */
+
+#include <random> /* std::uniform_int_distribution */
 
 class RecyclingPolicy {
  int recycling_rate; /* [0,100] : 0   release every returned chunk (always release),

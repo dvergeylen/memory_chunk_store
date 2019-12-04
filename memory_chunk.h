@@ -1,15 +1,26 @@
-/* This class is the Memory chunks store.
- * Once a thread needs a task memory chunk,
- * it simply asks the class for one.
- * If the class does have one available, it gives
- * the thread the chunk and removes it from the available ones.
- * If no memory chunks are available, the store creates a new one
- * and gives it to the asking thread.
+
+/* This Memory Chunk Store creates, stores and deletes
+ * chunks of memory, according to T type.
+ * When asked for a new chunk (via pull_chunk()), two
+ * cases can occur:
  *
- * When a thread finishes using it, it gives it back to the
- * memory chunk store. The memory chunk store decides
- * if it has to be kept or deleted according
- * to (configurable) heuristics.
+ * 1) Either there is at least one chunk in the store.
+ * Chunk Store pops the chunk from the queue and instanciates
+ * it with the TArgs arguments given to pull_chunk().
+ *
+ * 2) Either there is no chunk available in the store.
+ * Chunk Store then instanciate a new T via 'new' command
+ * and the TArgs arguments given to pull_chunk().
+ *
+ * When given back a memory chunk via (via push_chunk()),
+ * Chunk Store will ask R policy (via policy.should_recycle())
+ * if this chunk should be stored or released.
+ * Policy receives the current number of already available chunks
+ * to help making a decision.
+ *
+ * Extreme decision patterns could be never recycle (always release)
+ * or always recycle (never release). In between situations
+ * may occur according to a custom recycling policy.
  */
 #ifndef MEMORY_CHUNK_H
 #define MEMORY_CHUNK_H
