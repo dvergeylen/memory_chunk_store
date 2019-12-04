@@ -53,6 +53,10 @@ public:
   }
 
   bool should_recycle(int /*size*/) {
+    if (recycling_rate == 0)
+      return false;
+    if (recycling_rate == 100)
+      return true;
     return uniform_dist(gen) < recycling_rate;
   }
 
