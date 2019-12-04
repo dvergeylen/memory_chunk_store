@@ -34,7 +34,7 @@ public:
 
     std::random_device seed;
     gen = std::mt19937(seed());
-    uniform_dist = std::uniform_int_distribution<int>(1, 100);
+    uniform_dist = std::uniform_int_distribution<int>(1, 99);
   }
 
   ~MemoryChunkStore() {
