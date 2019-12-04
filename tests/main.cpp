@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
-
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../submodules/doctest/doctest/doctest.h"
 
