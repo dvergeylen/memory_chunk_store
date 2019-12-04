@@ -3,9 +3,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../submodules/doctest/doctest/doctest.h"
 
+#include "../recycling_policy.h"
 #include "../memory_chunk.h"
 
-MemoryChunkStore<int, int> store(0); /* 0: → always release (no chunk recycling) */
+MemoryChunkStore<int, RecyclingPolicy, int, int> store(0); /* 0: → always release (no chunk recycling) */
 int* elements[300];
 
 TEST_SUITE("Unit Tests") {
@@ -14,7 +15,7 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_rate(100);
+    store.set_recycling_params(100);
 
     /* Asking for chunks */
     for (int i=0; i<5; i++) {
@@ -36,7 +37,7 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_rate(0);
+    store.set_recycling_params(0);
 
     /* Asking for chunks */
     for (int i=0; i<5; i++) {
@@ -56,7 +57,7 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_rate(100);
+    store.set_recycling_params(100);
 
     /* Asking for chunks */
     for (int i=0; i<5; i++) {
@@ -76,7 +77,7 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_rate(70);
+    store.set_recycling_params(70);
 
     /* Asking for chunks */
     for (int i=0; i<300; i++) {

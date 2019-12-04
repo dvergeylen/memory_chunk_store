@@ -16,36 +16,28 @@
 
 #include <mutex>
 #include <queue>
-#include <random>     /* std::uniform_int_distribution */
-#include <algorithm>  /* std::max                      */
+#include <algorithm>  /* std::max */
 
-template <typename T, typename... Args>
+template <typename T, typename R, typename RArg, typename... TArgs >
 class MemoryChunkStore {
   std::queue<T*> available_chunks;
   std::mutex available_chunks_mtx;
-  int recycling_rate; /* [0,100] : 0   release every returned chunk (always release),
-                                   100    keep every returned chunk (never release)  */
-  std::mt19937 gen;
-  std::uniform_int_distribution<int> uniform_dist;
-
+  R* policy;
 public:
-  MemoryChunkStore(int _recycling_rate = 0) {
-    recycling_rate = std::max(0, std::min(100, _recycling_rate));
-
-    std::random_device seed;
-    gen = std::mt19937(seed());
-    uniform_dist = std::uniform_int_distribution<int>(1, 99);
+  MemoryChunkStore(RArg rarg) {
+    policy = new R(rarg);
   }
 
   ~MemoryChunkStore() {
     empty_memory_chunks_queue();
+    delete policy;
   }
-  T* pull_chunk(Args... args); /* A T ptr will be returned with T constructor called with args */
+  T* pull_chunk(TArgs... args); /* A T ptr will be returned with T constructor called with args */
   void push_chunk(T* chunk);
   bool is_empty();
   int size();
-  int get_recycling_rate();
-  void set_recycling_rate(int rate);
+  RArg get_recycling_params();
+  void set_recycling_params(RArg params);
   void empty_memory_chunks_queue();
 };
 
