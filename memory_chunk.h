@@ -61,7 +61,7 @@ public:
   bool is_empty();
   int size();
   RArg get_recycling_params();
-  void set_recycling_params(RArg params);
+  void set_recycling_params(RArg rarg);
   void empty_memory_chunks_queue();
 };
 

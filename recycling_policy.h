@@ -37,6 +37,10 @@
 
 #include <random> /* std::uniform_int_distribution */
 
+struct recycling_options {
+  int recycling_rate;
+};
+
 class RecyclingPolicy {
  int recycling_rate; /* [0,100] : 0   release every returned chunk (always release),
                                   100    keep every returned chunk (never release)  */
@@ -44,8 +48,8 @@ class RecyclingPolicy {
  std::uniform_int_distribution<int> uniform_dist;
 
 public:
-  RecyclingPolicy(int _recycling_rate = 0) {
-    recycling_rate = std::max(0, std::min(100, _recycling_rate));
+  RecyclingPolicy(struct recycling_options options) {
+    recycling_rate = std::max(0, std::min(100, options.recycling_rate));
 
     std::random_device seed;
     gen = std::mt19937(seed());
@@ -60,8 +64,8 @@ public:
     return uniform_dist(gen) < recycling_rate;
   }
 
-  void set_recycling_params(int rate) {
-    recycling_rate = std::max(0, std::min(100, rate));
+  void set_recycling_params(struct recycling_options opts) {
+    recycling_rate = std::max(0, std::min(100, opts.recycling_rate));
   }
 
   int get_recycling_params() {
