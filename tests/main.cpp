@@ -18,7 +18,11 @@
 #include "../recycling_policy.h"
 #include "../memory_chunk.h"
 
-MemoryChunkStore<RecyclingPolicy, int, int, int> store(0); /* 0: → always release (no chunk recycling) */
+struct recycling_options opts = {
+  100 /* 0: → always release (no chunk recycling) */
+};
+
+MemoryChunkStore<RecyclingPolicy, struct recycling_options, int, int> store(opts);
 int* elements[300];
 
 TEST_SUITE("Unit Tests") {
@@ -27,7 +31,8 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_params(100);
+    opts.recycling_rate = 100;
+    store.set_recycling_params(opts);
 
     /* Asking for chunks */
     for (int i=0; i<5; i++) {
@@ -49,7 +54,8 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_params(0);
+    opts.recycling_rate = 0;
+    store.set_recycling_params(opts);
 
     /* Asking for chunks */
     for (int i=0; i<5; i++) {
@@ -69,7 +75,8 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_params(100);
+    opts.recycling_rate = 100;
+    store.set_recycling_params(opts);
 
     /* Asking for chunks */
     for (int i=0; i<5; i++) {
@@ -89,7 +96,8 @@ TEST_SUITE("Unit Tests") {
     store.empty_memory_chunks_queue();
     REQUIRE(store.size() == 0);
 
-    store.set_recycling_params(70);
+    opts.recycling_rate = 70;
+    store.set_recycling_params(opts);
 
     /* Asking for chunks */
     for (int i=0; i<300; i++) {
