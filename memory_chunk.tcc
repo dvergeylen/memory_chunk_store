@@ -26,7 +26,6 @@ T* MemoryChunkStore<R, RArg, T, TArgs...>::pull_chunk(TArgs... args) {
       available_chunks_mtx.unlock();
 
       /* Reset object */
-      ref->~T();
       return new (ref) T(args...);
 
     /* No more chunk available, create new one! */
@@ -56,6 +55,7 @@ void MemoryChunkStore<R, RArg, T, TArgs...>::push_chunk(T* chunk) {
 
   /* Release or not, according to recycling_rate */
   if (policy->should_recycle(available_chunks.size())) {
+    chunk->~T();
     available_chunks.push(chunk);
     available_chunks_mtx.unlock();
   } else {
